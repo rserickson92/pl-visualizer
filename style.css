@@ -1,0 +1,27 @@
+body {
+  font: 10px sans-serif;
+}
+
+text {
+  fill: red;
+}
+
+.axis line,
+.axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.outer,
+.inner {
+  shape-rendering: crispEdges;
+}
+
+.outer {
+  fill: none;
+}
+
+.inner {
+  fill: none;
+}
