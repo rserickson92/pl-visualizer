@@ -13,27 +13,39 @@
     .attr("transform", "translate("+margin.left+","+margin.top+")"),
   year = function(d) { return d["year"]; },
   repos = function(d) { return d["nbRepos"]; },
-  xScale, yScale;
+  xScale, yScale, xAxis, yAxis;
 
   d3.json("data.json", function(err, data) {
     initPlot(data);
-    d3.select("select").on("change", function(){
-      drawPlot(data, this.value);
+    loadSelect(data);
+    d3.select("#paradigm-select").on("change", function(){
+      var updatedData = drawPlot(data, this.value);
+      //updateAxes(updatedData);
     });
   });
 
-  var selectAllAndFilter = function(selector, data, paradigm) {
-    var key = function(d) { return d.name };
-    if(paradigm != "all") {
-      return svg.selectAll(selector).data(data.filter(function(d) {
-	return _.contains(d["paradigms"], paradigm);
-      }), key);
+  var loadSelect = function(data) {
+    var select = d3.select("body").append("select")
+      .attr("id", "paradigm-select"), i,
+    numParadigmArrays = data.length, 
+    allParadigmArrays = [];
+    for(i = 0; i < numParadigmArrays; i++) {
+      allParadigmArrays.push(data[i].paradigms);
     }
-    return svg.selectAll(selector).data(data, key);
+    var options = _.uniq(_.flatten(allParadigmArrays)),
+    numOptions = options.length;
+    for(i = 0; i < numOptions; i++) {
+      select.append("option").text(options[i]);
+    }
   }
-  
+
   var drawPlot = function(data, paradigm) {
-    var circleData = selectAllAndFilter("circle", data, paradigm);
+    var filteredData = paradigm == "all" ? data 
+      : data.filter(function(d) {
+	return _.contains(d["paradigms"], paradigm);
+      }),
+    key = function(d) { return d.name },
+    circleData = svg.selectAll("circle").data(filteredData, key);
     circleData.enter()
       .append("circle")
       .attr("cx", function(d) {
@@ -42,9 +54,9 @@
       .attr("cy", function(d) {
 	return yScale(repos(d));
       })
-      .attr("r", 5);
+      .attr("r", 5),
     circleData.exit().remove();
-    var textData = selectAllAndFilter("text", data, paradigm);
+    var textData = svg.selectAll("text").data(filteredData, key);
     textData.enter()
       .append("text")
       .text(function(d) {
@@ -59,19 +71,28 @@
     textData.exit().remove();
   };
 
+  var updateAxes = function(data) {
+    xScale.domain(d3.extent(data, year));
+    yScale.domain(d3.extent(data, repos));
+  }
+
   var initPlot = function(data) {
     xScale = d3.scale.linear()
       .domain(d3.extent(data, year))
       .range([0, w]),
     yScale = d3.scale.log()
       .domain(d3.extent(data, repos))
-      .range([h, 0]);
-    var xAxis = d3.svg.axis()
+      .range([h, 0]),
+    xAxis = d3.svg.axis()
       .scale(xScale)
-      .orient("bottom"),
+      .orient("bottom")
+      .ticks(10),
     yAxis = d3.svg.axis()
       .scale(yScale)
-      .orient("left");
+      .orient("left")
+      .ticks(10);
+
+    drawPlot(data, "all");
 
     svg.append("g")
       .attr("class", "axis")
@@ -82,7 +103,6 @@
       .attr("class", "axis")
       .call(yAxis);
     
-    drawPlot(data, "all");
 
   };
 })()
