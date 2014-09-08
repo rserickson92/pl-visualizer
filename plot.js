@@ -82,8 +82,8 @@
   };
 
   var updateScales = function(data) {
-    xScale.domain(xDomain(data));
-    yScale.domain(yDomain(data));
+    xScale.domain(xDomain(data)).nice();
+    yScale.domain(yDomain(data)).nice();
   }
 
   var xDomain = function(data){
@@ -119,7 +119,7 @@
   var init = function(data) {
     margin = {top: 20, right: 20, bottom: 20, left: 60};
     padding = {top: 60, right: 60, bottom: 60, left: 60};
-    yearPadding = 1, reposPadding = 100000;
+    yearPadding = 1, reposPadding = 10;
     outerWidth = 960, outerHeight = 500;
     innerWidth = outerWidth - margin.left - margin.right; 
     innerHeight = outerHeight - margin.top - margin.bottom;
