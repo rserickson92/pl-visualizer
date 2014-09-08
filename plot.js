@@ -90,14 +90,15 @@
     var domain = d3.extent(data, year);
     domain[0] -= yearPadding;
     domain[1] += yearPadding;
-    console.log(domain.toString());
     return domain;
   };
 
   var yDomain = function(data) {
-    var domain = d3.extent(data, repos);
-    domain[0] -= reposPadding;
+    var domain = d3.extent(data, repos),
+    bottom = domain[0] - reposPadding;
+    domain[0] = bottom >= 1 ? bottom : domain[0];
     domain[1] += reposPadding;
+    console.log(domain.toString());
     return domain;
   }
   var updateAxes = function() {
@@ -118,7 +119,7 @@
   var init = function(data) {
     margin = {top: 20, right: 20, bottom: 20, left: 60};
     padding = {top: 60, right: 60, bottom: 60, left: 60};
-    yearPadding = 1, reposPadding = 10;
+    yearPadding = 1, reposPadding = 100000;
     outerWidth = 960, outerHeight = 500;
     innerWidth = outerWidth - margin.left - margin.right; 
     innerHeight = outerHeight - margin.top - margin.bottom;
@@ -145,8 +146,8 @@
       .ticks(15)
       .tickFormat(d3.format("d"));
     yAxis = d3.svg.axis()
-      .orient("left")
-      .ticks(5);
+      .ticks(5)
+      .orient("left");
 
     svg.append("g")
       .attr("class", "x axis")
