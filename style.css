@@ -6,6 +6,18 @@ text {
   fill: red;
 }
 
+text.name {
+  fill: black;
+}
+
+circle {
+  fill-opacity: 0.5;
+  stroke-width: 2;
+  stroke: red;
+  stroke-opacity: 0.5;
+  fill: red;
+}
+
 .axis line,
 .axis path {
   fill: none;
@@ -13,15 +25,3 @@ text {
   shape-rendering: crispEdges;
 }
 
-.outer,
-.inner {
-  shape-rendering: crispEdges;
-}
-
-.outer {
-  fill: none;
-}
-
-.inner {
-  fill: none;
-}
