@@ -6,7 +6,7 @@ text {
   fill: red;
 }
 
-text.name {
+text.name, text.label {
   fill: black;
 }
 

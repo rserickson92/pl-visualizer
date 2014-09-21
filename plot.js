@@ -152,9 +152,23 @@
     svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0,"+h+")");
+    svg.append("text")
+      .attr("class", "label")
+      .attr("x", w)
+      .attr("y", h + 30)
+      .attr("text-anchor", "end")
+      .text("Year created")
 
     svg.append("g")
       .attr("class", "y axis");
+
+    svg.append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("x", 0)
+      .attr("y", -40)
+      .attr("text-anchor", "end")
+      .text("Number of Github Repos created between Jan - Aug '13")
     
     drawPlot(data, "all");
 
